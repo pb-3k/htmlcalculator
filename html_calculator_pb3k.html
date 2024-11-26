@@ -1,0 +1,142 @@
+<html>
+<head>
+    <title>HTML Calculator</title>
+    <script>
+        let result = 0;
+        let action = 'new';
+        let smallnumber1 = 0;
+        let smallnumber2 = 0;
+
+        // Clear calculator
+        function clearCalculator() {
+            document.getElementById('result').value = ''; // Clear display
+            result = 0; // Reset result
+            action = 'new'; // Reset action state
+            smallnumber1 = 0; // Reset first number
+            smallnumber2 = 0; // Reset second number
+        }
+
+        // Update the input display and track numbers
+        function updateResultInput(addOn) {
+            let oldString = document.getElementById("result").value;
+            let newString = oldString + addOn;
+            document.getElementById("result").value = newString;
+
+            if (action === 'new') {
+                smallnumber1 = parseFloat(newString); // Update first number
+                result = smallnumber1;
+            } else if (!isNaN(parseFloat(addOn))) {
+                let splitExpression = newString.split(action); // Split by operator
+                if (splitExpression.length === 2) {
+                    smallnumber2 = parseFloat(splitExpression[1]); // Update second number
+                }
+            }
+        }
+
+        // Perform the calculation based on the selected operator
+        function performCalculation() {
+            if (action === "+") {
+                result = smallnumber1 + smallnumber2;
+            } else if (action === "-") {
+                result = smallnumber1 - smallnumber2;
+            } else if (action === "*") {
+                result = smallnumber1 * smallnumber2;
+            } else if (action === "/") {
+                if (smallnumber2 !== 0) {
+                    result = smallnumber1 / smallnumber2;
+                } else {
+                    result = "Error"; // Handle division by zero
+                }
+            }
+
+            // Update the display and reset state
+            if (isNaN(result)) {
+                document.getElementById("result").value = "Error";
+            } else {
+                document.getElementById("result").value = result;
+            }
+
+            smallnumber1 = result; // Set result as the first number for next operation
+            smallnumber2 = 0;      // Reset second number
+            action = '';           // Reset action
+        }
+
+        // Operator functions
+        function addOperator(operator) {
+            if (action !== '') {
+                performCalculation(); // Perform pending calculation
+            }
+            action = operator; // Set the new operator
+            let oldString = document.getElementById("result").value;
+            let newString = oldString + operator;
+            document.getElementById("result").value = newString;
+        }
+
+        function equal() {
+            performCalculation(); // Perform the final calculation
+            smallnumber2 = 0;     // Reset second number
+            action = '';          // Clear the operator
+        }
+    </script>
+
+    <style>
+        table {
+            border: 1px solid black;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        input[type="button"] {
+            width: 100%;
+            padding: 20px 40px;
+            background-color: green;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+        }
+        input[type="text"] {
+            padding: 20px 30px;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <table id="calcu">
+        <tr>
+            <td colspan="3">
+                <input type="text" disabled id="result">
+            </td>
+            <td><input type="button" value="C" onClick="clearCalculator()"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="1" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="2" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="3" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="/" onClick="addOperator('/')"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="4" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="5" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="6" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="*" onClick="addOperator('*')"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="7" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="8" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="9" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="-" onClick="addOperator('-')"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="0" onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="." onClick="updateResultInput(this.value);"></td>
+            <td><input type="button" value="=" onClick="equal();"></td>
+            <td><input type="button" value="+" onClick="addOperator('+')"></td>
+        </tr>
+    </table>
+</body>
+</html>
